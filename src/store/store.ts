@@ -1,18 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit';
-import taskReducer from './todos.store';
-import filterReducer from './filter.store';
-import themeReducer from './theme.store';
-import { todosApi } from '../apis/apiServices/todosApi';
+import taskReducer from '../store/todos.store';
+import filterReducer from '../store/filter.store';
+import themeReducer from '../store/theme.store';
 
 export const store = configureStore({
   reducer: {
     tasks: taskReducer,
     filter: filterReducer,
     theme: themeReducer,
-    [todosApi.reducerPath]: todosApi.reducer,
+    // todosApi removed — TanStack Query manages its own cache independently
   },
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware().concat(todosApi.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

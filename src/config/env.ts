@@ -1,6 +1,6 @@
 /**
  * Environment Configuration
- *
+ * 
  * This file centralizes all environment-specific configurations.
  * Can be extended for different environments (dev, staging, prod)
  */

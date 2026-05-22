@@ -1,5 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { useQuery } from '@tanstack/react-query';
 import ENV from '../../config/env';
+import { apiClient } from './client';
 
 export interface Todo {
   userId: number;
@@ -8,36 +9,36 @@ export interface Todo {
   completed: boolean;
 }
 
-export const todosApi = createApi({
-  reducerPath: 'todosApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: ENV.API.BASE_URL,
-  }),
-  tagTypes: ['Todos', 'TodoDetail'],
-  endpoints: (builder) => ({
-    /**
-     * Fetch all todos from API
-     * Provides 'Todos' tag for cache invalidation
-     */
-    getTodos: builder.query<Todo[], void>({
-      query: () => '/todos',
-      providesTags: ['Todos'],
-      keepUnusedDataFor: ENV.CACHE.TODO_CACHE_TIME,
-    }),
+// ─── Query Keys ────────────────────────────────────────────────────────────────
+export const todoKeys = {
+  all: ['todos'] as const,
+  lists: () => [...todoKeys.all, 'list'] as const,
+  detail: (id: number) => [...todoKeys.all, 'detail', id] as const,
+};
 
-    /**
-     * Fetch a single todo by ID from API
-     * Provides specific 'TodoDetail' tag for that ID
-     */
-    getTodoById: builder.query<Todo, number>({
-      query: (id) => `/todos/${id}`,
-      providesTags: (result, error, id) => [{ type: 'TodoDetail', id }],
-      keepUnusedDataFor: ENV.CACHE.TODO_CACHE_TIME,
-    }),
-  }),
-});
+// ─── Fetchers ──────────────────────────────────────────────────────────────────
+const fetchTodos = async (): Promise<Todo[]> => {
+  const { data } = await apiClient.get<Todo[]>('/todos?_limit=10');
+  return data;
+};
 
-export const {
-  useGetTodosQuery,
-  useGetTodoByIdQuery,
-} = todosApi;
+const fetchTodoById = async (id: number): Promise<Todo> => {
+  const { data } = await apiClient.get<Todo>(`/todos/${id}`);
+  return data;
+};
+
+// ─── Hooks ─────────────────────────────────────────────────────────────────────
+export const useGetTodosQuery = () =>
+  useQuery<Todo[], Error>({
+    queryKey: todoKeys.lists(),
+    queryFn: fetchTodos,
+    staleTime: ENV.CACHE.TODO_CACHE_TIME * 1000,
+  });
+
+export const useGetTodoByIdQuery = (id: number) =>
+  useQuery<Todo, Error>({
+    queryKey: todoKeys.detail(id),
+    queryFn: () => fetchTodoById(id),
+    staleTime: ENV.CACHE.TODO_CACHE_TIME * 1000,
+    enabled: !!id,
+  });

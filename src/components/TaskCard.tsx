@@ -7,8 +7,8 @@ import {
 } from 'react-native';
 import { Task } from '../types/todo.types';
 import { getThemeColors } from '../hooks/useTheme';
-import { useAppDispatch } from '../store/hooks';
-import { toggleTask } from '../store/slices/todosSlice';
+import { useAppDispatch } from '../hooks/useRedux';
+import { toggleTask } from '../store/todos.store';
 
 interface TaskCardProps {
   task: Task;

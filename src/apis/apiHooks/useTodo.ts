@@ -1,15 +1,14 @@
 // src/hooks/useTodos.ts
 /**
- * Custom hooks for fetching todo data from API.
+ * Custom hooks for fetching todo data from API
  * Note: Create/Update/Delete operations are handled locally in Redux
- * as this is a dummy API that doesn't persist data.
+ * as this is a dummy API that doesn't persist data
  */
-
 import {
-  useGetTodoByIdQuery,
   useGetTodosQuery,
-  Todo,
-} from '../apis/apiServices/todosApi';
+  useGetTodoByIdQuery,
+  type Todo,
+} from '../apiServices/todosApi';
 
 /**
  * Hook to fetch all todos from API
@@ -26,9 +25,8 @@ export const useTodos = () => {
  * @returns Query result with todo data, isLoading, error, and refetch
  */
 export const useTodoDetail = (id: number) => {
-  const { data, isLoading, error, refetch } = useGetTodoByIdQuery(id, {
-    skip: !id,
-  });
+  // `skip` is no longer needed — `enabled: !!id` is set inside useGetTodoByIdQuery
+  const { data, isLoading, error, refetch } = useGetTodoByIdQuery(id);
   return { data, isLoading, error, refetch };
 };
 

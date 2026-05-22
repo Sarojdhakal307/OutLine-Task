@@ -11,28 +11,25 @@ import {
 import { getThemeColors, useTheme } from '../hooks/useTheme';
 import { useAppDispatch, useAppSelector } from '../hooks/useRedux';
 import { deleteTask, toggleTask } from '../store/todos.store';
-import { useTodoDetail } from '../hooks/useTodos';
+import { useTodoDetail } from '../apis/apiHooks/useTodo';
 
 interface TaskDetailScreenProps {
   route: any;
   navigation: any;
 }
 
-const TaskDetailScreen: React.FC<TaskDetailScreenProps> = ({
-  route,
-  navigation,
-}) => {
+const TaskDetailScreen: React.FC<TaskDetailScreenProps> = ({ route, navigation }) => {
   const { taskId } = route.params;
   const { isDarkMode } = useTheme();
   const colors = getThemeColors(isDarkMode);
   const dispatch = useAppDispatch();
 
   const { data: apiTask, isLoading } = useTodoDetail(taskId);
-  const localTasks = useAppSelector(state => state.tasks.localTasks);
+  const localTasks = useAppSelector((state) => state.tasks.localTasks);
 
   // Local tasks take priority over API tasks
   const task = useMemo(() => {
-    return localTasks.find(t => t.id === taskId) ?? apiTask;
+    return localTasks.find((t) => t.id === taskId) ?? apiTask;
   }, [taskId, localTasks, apiTask]);
 
   /**
@@ -48,19 +45,23 @@ const TaskDetailScreen: React.FC<TaskDetailScreenProps> = ({
    * Removes from local Redux store
    */
   const handleDeleteTask = () => {
-    Alert.alert('Delete Task', 'Are you sure you want to delete this task?', [
-      { text: 'Cancel', onPress: () => {} },
-      {
-        text: 'Delete',
-        onPress: () => {
-          dispatch(deleteTask(taskId));
-          Alert.alert('Success', 'Task deleted successfully', [
-            { text: 'OK', onPress: () => navigation.goBack() },
-          ]);
+    Alert.alert(
+      'Delete Task',
+      'Are you sure you want to delete this task?',
+      [
+        { text: 'Cancel', onPress: () => {} },
+        {
+          text: 'Delete',
+          onPress: () => {
+            dispatch(deleteTask(taskId));
+            Alert.alert('Success', 'Task deleted successfully', [
+              { text: 'OK', onPress: () => navigation.goBack() },
+            ]);
+          },
+          style: 'destructive',
         },
-        style: 'destructive',
-      },
-    ]);
+      ],
+    );
   };
 
   if (isLoading && !task) {
@@ -97,9 +98,7 @@ const TaskDetailScreen: React.FC<TaskDetailScreenProps> = ({
           <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>
             Title
           </Text>
-          <Text style={[styles.title, { color: colors.text }]}>
-            {task.title}
-          </Text>
+          <Text style={[styles.title, { color: colors.text }]}>{task.title}</Text>
         </View>
 
         <View style={[styles.section, { marginTop: 20 }]}>
@@ -109,11 +108,7 @@ const TaskDetailScreen: React.FC<TaskDetailScreenProps> = ({
           <View
             style={[
               styles.statusBadge,
-              {
-                backgroundColor: task.completed
-                  ? colors.success
-                  : colors.warning,
-              },
+              { backgroundColor: task.completed ? colors.success : colors.warning },
             ]}
           >
             <Text style={styles.statusText}>
@@ -133,20 +128,14 @@ const TaskDetailScreen: React.FC<TaskDetailScreenProps> = ({
           <Text style={[styles.sectionLabel, { color: colors.textSecondary }]}>
             User ID
           </Text>
-          <Text style={[styles.idText, { color: colors.text }]}>
-            {task.userId}
-          </Text>
+          <Text style={[styles.idText, { color: colors.text }]}>{task.userId}</Text>
         </View>
 
         <View style={[styles.actions, { marginTop: 32 }]}>
           <TouchableOpacity
             style={[
               styles.button,
-              {
-                backgroundColor: task.completed
-                  ? colors.warning
-                  : colors.success,
-              },
+              { backgroundColor: task.completed ? colors.warning : colors.success },
             ]}
             onPress={handleToggleTask}
           >
@@ -156,10 +145,7 @@ const TaskDetailScreen: React.FC<TaskDetailScreenProps> = ({
           </TouchableOpacity>
 
           <TouchableOpacity
-            style={[
-              styles.button,
-              { backgroundColor: colors.error, marginTop: 12 },
-            ]}
+            style={[styles.button, { backgroundColor: colors.error, marginTop: 12 }]}
             onPress={handleDeleteTask}
           >
             <Text style={styles.buttonText}>Delete Task</Text>
