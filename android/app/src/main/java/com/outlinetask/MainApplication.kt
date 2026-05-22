@@ -1,4 +1,4 @@
-package com.outlinetasks
+package com.outlinetask
 
 import android.app.Application
 import com.facebook.react.PackageList

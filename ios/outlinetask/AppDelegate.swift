@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     window = UIWindow(frame: UIScreen.main.bounds)
 
     factory.startReactNative(
-      withModuleName: "outlinetasks",
+      withModuleName: "outlinetask",
       in: window,
       launchOptions: launchOptions
     )
