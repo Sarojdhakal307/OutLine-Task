@@ -44,8 +44,8 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
-cd outlinetasks
+git clone https://github.com/Sarojdhakal307/OutLine-Task.git
+cd OutLine-Task
 ```
 
 ### 2. Install Node Dependencies
