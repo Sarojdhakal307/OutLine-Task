@@ -4,11 +4,12 @@
  * Note: Create/Update/Delete operations are handled locally in Redux
  * as this is a dummy API that doesn't persist data.
  */
+
 import {
-  useGetTodosQuery,
   useGetTodoByIdQuery,
-  type Todo,
-} from '../services/todosApi';
+  useGetTodosQuery,
+  Todo,
+} from '../apis/apiServices/todosApi';
 
 /**
  * Hook to fetch all todos from API

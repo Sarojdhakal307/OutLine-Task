@@ -1,5 +1,5 @@
 import { useColorScheme } from 'react-native';
-import { useAppSelector } from '../store/hooks';
+import { useAppSelector } from './useRedux';
 
 export const useTheme = () => {
   const themeMode = useAppSelector((state) => state.theme.mode);
