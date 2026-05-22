@@ -10,7 +10,6 @@ import {
 import { getThemeColors, useTheme } from '../hooks/useTheme';
 import { useAppSelector } from '../hooks/useRedux';
 
-
 import { FilterType } from '../store/filter.store';
 import ErrorState from '../components/ErrorState';
 import EmptyState from '../components/EmptyState';

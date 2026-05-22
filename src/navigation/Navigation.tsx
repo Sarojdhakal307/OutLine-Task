@@ -7,8 +7,9 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TaskListScreen from '../screens/TaskListScreen';
 ;
-import { useTheme, getThemeColors } from '../hooks/useTheme';
+import {  getThemeColors } from '../hooks/useTheme';
 import CreateTaskScreen from '../screens/CreateTaskScreen';
+import TaskDetailScreen from '../screens/TaskDetailScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -56,9 +57,10 @@ const Navigation: React.FC<NavigationProps> = ({ isDarkMode }) => {
           headerShown: false,
         }}
       >
-        <Stack.Screen name="TaskList" component={TaskListScreen}       options={{ headerShown: false }}/>
+       <Stack.Screen name="TaskList" component={TaskListScreen}       options={{ headerShown: false }}/>
+        <Stack.Screen name="TaskDetail" component={TaskDetailScreen} options={{ title: 'Task Detail' }}/>
         <Stack.Screen name="CreateTask" component={CreateTaskScreen}     options={{ title: 'New Task' }}/>
-
+     
       </Stack.Navigator>
     </NavigationContainer>
   );
