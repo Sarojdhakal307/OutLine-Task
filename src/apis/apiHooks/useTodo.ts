@@ -1,33 +1,54 @@
-// src/hooks/useTodos.ts
 /**
- * Custom hooks for fetching todo data from API
- * Note: Create/Update/Delete operations are handled locally in Redux
- * as this is a dummy API that doesn't persist data
+ * Custom TanStack Query hooks for Todos
  */
+
+import { useQuery } from '@tanstack/react-query';
+
 import {
-  useGetTodosQuery,
-  useGetTodoByIdQuery,
+  fetchTodos,
+  fetchTodoById,
+  todoKeys,
   type Todo,
 } from '../apiServices/todosApi';
+import ENV from '../../config/env';
 
 /**
- * Hook to fetch all todos from API
- * @returns Query result with data, isLoading, error, and refetch
+ * Hook to fetch all todos
  */
 export const useTodos = () => {
-  const { data = [], isLoading, error, refetch } = useGetTodosQuery();
-  return { data, isLoading, error, refetch };
+  const { data = [], isLoading, error, refetch } =
+    useQuery<Todo[], Error>({
+      queryKey: todoKeys.lists(),
+      queryFn: fetchTodos,
+      staleTime: ENV.CACHE.TODO_CACHE_TIME * 1000,
+    });
+
+  return {
+    data,
+    isLoading,
+    error,
+    refetch,
+  };
 };
 
 /**
- * Hook to fetch a single todo by ID from API
- * @param id - Todo ID
- * @returns Query result with todo data, isLoading, error, and refetch
+ * Hook to fetch single todo detail
  */
 export const useTodoDetail = (id: number) => {
-  // `skip` is no longer needed — `enabled: !!id` is set inside useGetTodoByIdQuery
-  const { data, isLoading, error, refetch } = useGetTodoByIdQuery(id);
-  return { data, isLoading, error, refetch };
+  const { data, isLoading, error, refetch } =
+    useQuery<Todo, Error>({
+      queryKey: todoKeys.detail(id),
+      queryFn: () => fetchTodoById(id),
+      staleTime: ENV.CACHE.TODO_CACHE_TIME * 1000,
+      enabled: !!id,
+    });
+
+  return {
+    data,
+    isLoading,
+    error,
+    refetch,
+  };
 };
 
 export type { Todo };
